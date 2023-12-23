@@ -1,6 +1,6 @@
 const express = require('express')
 const connectDB = require("./db/conn");
-
+const cors = require("cors");
 const app = express()
 
 
@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 8888
 
 // connectDB
 connectDB();
+app.use(cors());
 
 // routes
 app.get('/', (req, res) => {
