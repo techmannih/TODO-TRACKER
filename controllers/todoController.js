@@ -34,19 +34,32 @@ module.exports.addTodo = async (req, res) => {
 };
 module.exports.deleteTodo = async (req, res) => {
   console.log("DELETE request received");
+
   try {
-    const { titleId } = req.body;
-        console.log("Todo ID to delete:", titleId);
-        const deletedTodoList = await TodoModel.findOneAndDelete(titleId);
-        if (!deletedTodoList) {
-          return res.status(404).json({ error: 'Todo List not found' });
-        }
-        res.status(200) .json({   deletedTodo: deletedTodoList,   message: "todo delete successfully ",  });
-      }  catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-        console.log(error);
-      }
-}
+    const { id } = req.params; // Use params to get the ID from the URL
+
+    console.log("Todo ID to delete:", id);
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid Todo ID format' });
+    }
+
+    const deletedTodoList = await TodoModel.findByIdAndDelete(id);
+
+    if (!deletedTodoList) {
+      return res.status(404).json({ error: 'Todo List not found' });
+    }
+
+    res.status(200).json({
+      deletedTodo: deletedTodoList,
+      message: "Todo deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+    console.log(error);
+  }
+};
+
 module.exports.addTask = async (req, res) => {
   try {
     const { id, task } = req.body;
