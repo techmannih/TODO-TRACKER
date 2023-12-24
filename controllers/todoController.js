@@ -62,7 +62,8 @@ module.exports.deleteTodo = async (req, res) => {
 
 module.exports.addTask = async (req, res) => {
   try {
-    const { id, task } = req.body;
+    const { task } = req.body;
+    const { id} = req.params;
 
     // Check if id is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -93,6 +94,7 @@ module.exports.addTask = async (req, res) => {
 module.exports.deleteTask = async (req, res) => {
   try {
     const { titleId, taskId } = req.body;
+    
     console.log('Received titleId:', titleId);
     console.log('Received taskId:', taskId);
     // Check if titleId and taskId are valid ObjectId
