@@ -4,6 +4,7 @@ const cors = require("cors");
 const app = express();
 require("dotenv").config();
 const userRoutes=require("./routes/userRoutes")
+const todoRoutes=require("./routes/todoRoutes")
 
 // variables
 const PORT = process.env.PORT || 8888;
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 
 app.use(express.json());
 app.use(userRoutes);
+app.use(todoRoutes);
 
 app.listen(PORT, function () {
   console.log(`Listening on port ${PORT}`);
