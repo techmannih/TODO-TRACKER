@@ -23,8 +23,8 @@ module.exports.addTodo = async (req, res) => {
 
 module.exports.addTodo = async (req, res) => {
   try {
-    const { title ,titleId } = req.body;
-    const todolist = new TodoModel({ title,titleId, tasks: [] }); // Use TodoModel instead of Todo
+    const { title  } = req.body;
+    const todolist = new TodoModel({ title, tasks: [] }); // Use TodoModel instead of Todo
     await todolist.save();
     res.status(200).json(todolist);
   } catch (error) {
@@ -63,27 +63,29 @@ module.exports.deleteTodo = async (req, res) => {
 module.exports.addTask = async (req, res) => {
   try {
     const { task } = req.body;
-    const { id} = req.params;
+    const { id } = req.params;
+    console.log('Received id:', id);
+    console.log('Received task:', task);
 
     // Check if id is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid Todo ID format' });
     }
 
-    // Find the Todo list by ID
-    const todoList = await TodoModel.findById(id);
+    // Update the Todo list by ID and add the task
+    const updatedTodoList = await TodoModel.findOneAndUpdate(
+      { _id: id }, // Provide the query condition here
+      { $push: { tasks: { taskName: task } } },
+      { new: true } // Return the updated document
+    );
 
     // Check if Todo list exists
-    if (!todoList) {
+    if (!updatedTodoList) {
       return res.status(404).json({ error: 'Todo List not found' });
     }
 
-    // Add task to the Todo list
-    todoList.tasks.push({ taskName: task });
-    await todoList.save();
-
     // Send success response
-    res.status(200).json({ todo: todoList, message: 'Task added successfully' });
+    res.status(200).json({ todo: updatedTodoList, message: 'Task added successfully' });
   } catch (error) {
     // Handle internal server error
     console.error(error);
@@ -102,7 +104,7 @@ module.exports.deleteTask = async (req, res) => {
       return res.status(400).json({ error: 'Invalid ID format' });
     }
 
-    const updatedTodoList = await TodoModel.findOneAndUpdate(
+    const updatedTodoList = await TodoModel.findByIdAndUpdate(
       { _id: titleId },
       { $pull: { tasks: { _id: taskId } } },
       { new: true }

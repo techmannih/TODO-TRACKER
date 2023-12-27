@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
 
 const todoSchema = new mongoose.Schema({
-  titleId: {
-    type: String,
-  },
+  
   title: {
     type: String,
     required: true,
