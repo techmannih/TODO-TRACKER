@@ -14,7 +14,14 @@ const todoSchema = new mongoose.Schema({
       },
     },
   ],
-});
+  dateStamp: {
+    type: Date,
+    default: Date.now,
+  },
+},
+
+{ timestamps: true }
+);
 
 const TodoModel = mongoose.model("Todo", todoSchema);
 
