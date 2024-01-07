@@ -62,10 +62,10 @@ module.exports.deleteTodo = async (req, res) => {
 
 module.exports.addTask = async (req, res) => {
   try {
-    const { task } = req.body;
+    const { tasks } = req.body.todo;
     const { id } = req.params;
     console.log('Received id:', id);
-    console.log('Received task:', task);
+    console.log('Received task:', tasks);
 
     // Check if id is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -75,7 +75,7 @@ module.exports.addTask = async (req, res) => {
     // Update the Todo list by ID and add the task
     const updatedTodoList = await TodoModel.findOneAndUpdate(
       { _id: id }, // Provide the query condition here
-      { $push: { tasks: { taskName: task } } },
+      { $push: { tasks: tasks[0] } },
       { new: true } // Return the updated document
     );
 
