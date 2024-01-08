@@ -16,7 +16,7 @@ router.route("/todolists").get(getAllTodo); // Get all todo lists
 router.route("/todolist/:id").delete(deleteTodo); // Delete a todo list
 router.route("/todolist/:id/task").put(addTask); // Add a task to a todo list
 // router.route("").put(updateTask);
-router.route("/todolist/task/:id").put(deleteTask); // Delete a task from a todo list
+router.route("/todolist/task/:id").delete(deleteTask); // Delete a task from a todo list
 
 module.exports = router;
  
