@@ -92,32 +92,31 @@ module.exports.addTask = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
 module.exports.deleteTask = async (req, res) => {
   try {
-    const { titleId, taskId } = req.body;
-    
-    console.log('Received titleId:', titleId);
-    console.log('Received taskId:', taskId);
-    // Check if titleId and taskId are valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(titleId) || !mongoose.Types.ObjectId.isValid(taskId)) {
+    const { id } = req.params; // Extract taskId from req.params
+
+    console.log('Received taskId:', id);
+
+    // Check if id is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID format' });
     }
 
-    const updatedTodoList = await TodoModel.findByIdAndUpdate(
-      { _id: titleId },
-      { $pull: { tasks: { _id: taskId } } },
-      { new: true }
+    const updatedTodoList = await TodoModel.updateOne(
+      { "tasks._id": id },
+      { $pull: { tasks: { _id: id } } }
     );
 
-    if (!updatedTodoList) {
+    if (updatedTodoList.nModified === 0) {
       return res.status(404).json({ error: 'Task not found' });
     }
 
-    res.json(updatedTodoList);
+    res.json({ message: 'Task deleted successfully', card: updatedTodoList }); // Include the card details in the response
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
     console.error(error);
   }
 };
+
 
