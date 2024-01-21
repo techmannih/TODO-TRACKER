@@ -1,8 +1,9 @@
 const TodoModel = require("../models/todomodels");
 const mongoose=require('mongoose')
 module.exports.getAllTodo = async (req, res) => {
-  try {
-    const todolists = await TodoModel.find();
+  try  {
+    const user_id=req.body;
+    const todolists = await TodoModel.find(user_id).populate('user_id');
     res.status(200).json({ todo: todolists });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
