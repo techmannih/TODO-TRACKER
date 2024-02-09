@@ -1,35 +1,37 @@
 const TodoModel = require("../models/todomodels");
 const mongoose=require('mongoose')
-module.exports.getAllTodo = async (req, res) => {
+module.exports.getTodo = async (req, res) => {
   try  {
-    const user_id=req.body;
-    const todolists = await TodoModel.find(user_id).populate('user_id');
+    const todolists = await TodoModel.find({userId: req.params.userId });
+    console.log("data",todolists)
     res.status(200).json({ todo: todolists });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
     console.log(error);
   }
 };
+module.exports.getTodoById = async (req, res) => {
+  // try  {
+  //   const todoId = req.params.id;
+  //   const todolists = await TodoModel.findById(todoId);
+  //   console.log("sata",todolists.userId)
+  //   res.status(200).json({ todo: todolists });
+  // } catch (error) {
+  //   res.status(500).json({ error: "Internal Server Error" });
+  //   console.log(error);
+  // }
+};
 module.exports.addTodo = async (req, res) => {
   try {
     const { title } = req.body;
-    const todolist = new TodoModel({ title, tasks: [] }); // Use TodoModel instead of Todo
+    // const userId = new mongoose.Types.ObjectId(req.body.userId);
+    // console.log("userid",userId)
+    const todolist = new TodoModel({ userId: req.body.userId ,title, tasks: [] }); // Use TodoModel instead of Todo
     await todolist.save();
+    // console.log("userid",userId)
     res.status(200).json(todolist);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
-    console.log(error);
-  }
-};
-
-module.exports.addTodo = async (req, res) => {
-  try {
-    const { title  } = req.body;
-    const todolist = new TodoModel({ title, tasks: [] }); // Use TodoModel instead of Todo
-    await todolist.save();
-    res.status(200).json(todolist);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
     console.log(error);
   }
 };
