@@ -1,4 +1,5 @@
 # Trello clone backend 
+** Trello clone frontend [see](https://github.com/techmannih/trello_clone_frontend)**
 
 ## Local Development
 
